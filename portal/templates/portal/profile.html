@@ -1,0 +1,53 @@
+{% extends 'portal/base_portal.html' %}
+
+{% block header_title %}Mis Datos Fiscales{% endblock %}
+
+{% block content %}
+
+<!-- Alertas / Mensajes de Django -->
+{% if messages %}
+    {% for message in messages %}
+        <div style="
+            {% if message.tags == 'error' %}
+                background: rgba(239, 68, 68, 0.15); color: var(--accent-danger); border: 1px solid rgba(239, 68, 68, 0.3);
+            {% else %}
+                background: rgba(16, 185, 129, 0.15); color: var(--accent-success); border: 1px solid rgba(16, 185, 129, 0.3);
+            {% endif %}
+            padding: 12px; border-radius: 8px; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between;">
+            <span>{{ message }}</span>
+            <button onclick="this.parentElement.remove()" style="background:none; border:none; color:inherit; cursor:pointer; font-weight:bold;">&times;</button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<form method="post" action="{% url 'portal:profile' %}" class="card animate-fade-in" style="background: var(--bg-dark); max-width: 600px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+    {% csrf_token %}
+    
+    <div style="margin-bottom: 1.5rem;">
+        <label style="display: block; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 500;">Razón Social / Nombre Comercial</label>
+        <input type="text" name="razon_social" value="{{ profile.razon_social }}" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: var(--bg-panel); color: var(--text-main); outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--accent-success)'" onblur="this.style.borderColor='rgba(255,255,255,0.15)'">
+    </div>
+    
+    <div style="margin-bottom: 1.5rem;">
+        <label style="display: block; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 500;">RFC (Registro Federal de Contribuyentes)</label>
+        <input type="text" name="rfc" value="{{ profile.rfc }}" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: var(--bg-panel); color: var(--text-main); outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--accent-success)'" onblur="this.style.borderColor='rgba(255,255,255,0.15)'">
+    </div>
+    
+    <div style="margin-bottom: 1.5rem;">
+        <label style="display: block; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 500;">Correo de Facturación</label>
+        <input type="email" name="correo_facturacion" value="{{ profile.correo_facturacion|default:'' }}" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: var(--bg-panel); color: var(--text-main); outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--accent-success)'" onblur="this.style.borderColor='rgba(255,255,255,0.15)'">
+    </div>
+    
+    <div style="margin-bottom: 1.5rem;">
+        <label style="display: block; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 500;">Dirección Fiscal</label>
+        <textarea name="direccion" rows="3" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: var(--bg-panel); color: var(--text-main); outline: none; transition: border-color 0.2s; font-family: inherit; resize: vertical;" onfocus="this.style.borderColor='var(--accent-success)'" onblur="this.style.borderColor='rgba(255,255,255,0.15)'">{{ profile.direccion|default:'' }}</textarea>
+    </div>
+    
+    <div style="display: flex; justify-content: flex-end; gap: 1rem; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1.25rem; margin-top: 2rem;">
+        <span class="text-muted" style="font-size: 0.8rem; font-style: italic;">* Los datos actualizados se reflejarán en tus próximos comprobantes XML/PDF.</span>
+        <button type="submit" class="btn btn-primary" style="background: var(--accent-success); cursor: pointer; border: none; font-weight: 600; padding: 0.75rem 1.75rem; border-radius: 8px; transition: transform 0.1s, opacity 0.2s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+            Guardar Cambios
+        </button>
+    </div>
+</form>
+{% endblock %}

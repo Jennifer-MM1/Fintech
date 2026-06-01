@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Cliente - Fintech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'core/css/index.css' %}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar animate-fade-in" style="background: var(--bg-dark); border-right: 1px solid rgba(255,255,255,0.1);">
+            <div class="logo" style="color: var(--accent-success);">Mi Portal</div>
+            <nav>
+                <a href="{% url 'portal:dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" {% if request.resolver_match.url_name == 'dashboard' %}style="background-color: rgba(16, 185, 129, 0.1); color: var(--accent-success);"{% endif %}>
+                    Facturas Pendientes
+                </a>
+                <a href="{% url 'portal:history' %}" class="nav-link {% if request.resolver_match.url_name == 'history' %}active{% endif %}" {% if request.resolver_match.url_name == 'history' %}style="background-color: rgba(16, 185, 129, 0.1); color: var(--accent-success);"{% endif %}>
+                    Historial de Pagos
+                </a>
+                <a href="{% url 'portal:profile' %}" class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" {% if request.resolver_match.url_name == 'profile' %}style="background-color: rgba(16, 185, 129, 0.1); color: var(--accent-success);"{% endif %}>
+                    Mis Datos Fiscales
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content animate-fade-in" style="background: var(--bg-panel);">
+            <header class="top-header">
+                <h1>{% block header_title %}{% endblock %}</h1>
+                <div class="user-profile" style="display: flex; align-items: center; gap: 15px;">
+                    <a href="{% url 'portal:logout' %}" class="btn" style="background: rgba(239, 68, 68, 0.1); color: var(--accent-danger); font-size: 0.8rem; border: 1px solid rgba(239, 68, 68, 0.2); text-decoration: none;">Cerrar Sesión</a>
+                    <div class="text-muted" style="font-size: 0.9rem;">Cliente: {{ request.user.username }}</div>
+                    <div class="avatar" style="background-color: var(--accent-success);">{{ request.user.username|make_list|first|upper }}</div>
+                </div>
+            </header>
+            
+            <div class="content-area">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </main>
+    </div>
+</body>
+</html>

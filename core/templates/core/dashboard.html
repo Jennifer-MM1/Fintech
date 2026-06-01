@@ -1,0 +1,115 @@
+{% extends 'core/base.html' %}
+
+{% block title %}FintechOS - Dashboard de ISP & Cobros{% endblock %}
+{% block header_title %}Dashboard de ISP & Cobros{% endblock %}
+
+{% block content %}
+<!-- Alertas y Mensajes de Django -->
+{% if messages %}
+    {% for message in messages %}
+        <div style="background: rgba(59, 130, 246, 0.15); color: var(--accent-primary); border: 1px solid rgba(59, 130, 246, 0.3); padding: 12px; border-radius: 8px; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between;" class="animate-fade-in">
+            <span style="font-weight: 500;">{{ message }}</span>
+            <button onclick="this.parentElement.remove()" style="background:none; border:none; color:inherit; cursor:pointer; font-weight:bold; font-size: 1.2rem;">&times;</button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<!-- Tarjetas de Métricas Principales (Reales) -->
+<div class="grid-3">
+    <div class="card" style="border-left: 4px solid var(--accent-success);">
+        <h3 class="text-muted" style="font-size: 0.9rem; font-weight: 500;">Ingresos del Mes (Cobrado)</h3>
+        <p style="font-size: 2.2rem; font-weight: 700; margin-top: 10px; font-family: monospace;">${{ ingresos_mes }}</p>
+        <p class="text-success" style="font-size: 0.85rem; margin-top: 5px;">Facturas cobradas exitosamente</p>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--accent-warning);">
+        <h3 class="text-muted" style="font-size: 0.9rem; font-weight: 500;">Por Cobrar (Pendiente)</h3>
+        <p style="font-size: 2.2rem; font-weight: 700; margin-top: 10px; font-family: monospace;">${{ saldo_pendiente }}</p>
+        <p class="text-warning" style="font-size: 0.85rem; margin-top: 5px;">Monto total en facturas emitidas</p>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--accent-primary);">
+        <h3 class="text-muted" style="font-size: 0.9rem; font-weight: 500;">Conciliación Bancaria</h3>
+        <p style="font-size: 2.2rem; font-weight: 700; margin-top: 10px; font-family: monospace;">{{ movimientos_pendientes }}</p>
+        <p class="text-primary" style="font-size: 0.85rem; margin-top: 5px; color: var(--accent-primary);">Movimientos SPEI por emparejar</p>
+    </div>
+</div>
+
+<!-- Sección de Acciones Rápidas del ISP -->
+<div class="card" style="margin-top: 2rem; background: linear-gradient(135deg, var(--bg-panel) 0%, rgba(59, 130, 246, 0.05) 100%);">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+        <div>
+            <h3 style="margin-bottom: 5px; color: var(--text-main);">Panel de Simulación de Facturación</h3>
+            <p class="text-muted" style="font-size: 0.9rem; max-width: 600px;">Genera en lote las facturas mensuales para todos los clientes activos del ISP con base en sus planes de internet asignados. El sistema evitará cobros dobles automáticos.</p>
+        </div>
+        <form method="POST" action="{% url 'dashboard' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="trigger_billing">
+            <button type="submit" class="btn btn-primary" style="display: flex; align-items: center; gap: 8px; font-size: 0.95rem; padding: 0.8rem 1.5rem; background: var(--accent-primary); border-radius: 8px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                ⚡ Simular Facturación Mensual (Lote)
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Últimas Facturas Generadas -->
+<div class="card" style="margin-top: 2rem;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem; align-items: center;">
+        <h3>Facturas Emitidas Recientemente</h3>
+        <a href="{% url 'billing:invoices' %}" class="btn" style="background: rgba(255,255,255,0.05); color: var(--text-main); font-size: 0.85rem; border: 1px solid rgba(255,255,255,0.1); text-decoration: none;">Ver Módulo de Facturación</a>
+    </div>
+    
+    <table style="width: 100%; text-align: left; border-collapse: collapse;">
+        <thead>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <th style="padding: 1rem 0; color: var(--text-muted); font-size: 0.85rem;">Folio / Cliente</th>
+                <th style="padding: 1rem 0; color: var(--text-muted); font-size: 0.85rem;">Periodo</th>
+                <th style="padding: 1rem 0; color: var(--text-muted); font-size: 0.85rem; text-align: right;">Monto</th>
+                <th style="padding: 1rem 0; color: var(--text-muted); font-size: 0.85rem; text-align: center;">Estado</th>
+                <th style="padding: 1rem 0; color: var(--text-muted); font-size: 0.85rem;">Emisión</th>
+                <th style="padding: 1rem 0; color: var(--text-muted); font-size: 0.85rem;">UUID Digital SAT</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for factura in ultimas_facturas %}
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.01)'" onmouseout="this.style.backgroundColor='transparent'">
+                <td style="padding: 1.1rem 0;">
+                    <div style="font-weight: 600; color: var(--text-main);">Factura #{{ factura.id }}</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">{{ factura.cliente.razon_social }}</div>
+                </td>
+                <td style="padding: 1.1rem 0; font-size: 0.9rem; color: var(--text-main);">
+                    {{ factura.periodo_facturacion }}
+                </td>
+                <td style="padding: 1.1rem 0; text-align: right; font-weight: bold; font-family: monospace; color: var(--text-main);">
+                    ${{ factura.monto }}
+                </td>
+                <td style="padding: 1.1rem 0; text-align: center;">
+                    {% if factura.estado == 'PAID' %}
+                        <span style="background: rgba(16, 185, 129, 0.15); color: var(--accent-success); padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; border: 1px solid rgba(16, 185, 129, 0.1);">PAGADA</span>
+                    {% elif factura.estado == 'PENDING' %}
+                        <span style="background: rgba(245, 158, 11, 0.15); color: var(--accent-warning); padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; border: 1px solid rgba(245, 158, 11, 0.1);">PENDIENTE</span>
+                    {% else %}
+                        <span style="background: rgba(239, 68, 68, 0.15); color: var(--accent-danger); padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; border: 1px solid rgba(239, 68, 68, 0.1);">VENCIDA</span>
+                    {% endif %}
+                </td>
+                <td style="padding: 1.1rem 0; font-size: 0.85rem; color: var(--text-muted);">
+                    {{ factura.fecha_emision|date:"d M Y" }}
+                </td>
+                <td style="padding: 1.1rem 0; font-family: monospace; font-size: 0.8rem;">
+                    {% if factura.sat_uuid %}
+                        <span style="color: var(--text-main);">{{ factura.sat_uuid|slice:":18" }}...</span>
+                    {% else %}
+                        <span style="color: var(--text-muted); font-style: italic;">Sin timbrar (Pendiente)</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="padding: 3rem 0; text-align: center; color: var(--text-muted);">
+                    No hay facturas emitidas recientemente. Usa el botón superior para simular la facturación.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'portal/base_portal.html' %}
+
+{% block title %}FintechOS - Historial de Pagos{% endblock %}
+{% block header_title %}Mi Historial de Pagos{% endblock %}
+
+{% block content %}
+<div class="card" style="background: var(--bg-dark); border: 1px solid rgba(255,255,255,0.05);">
+    <h3 style="margin-bottom: 1.5rem; color: var(--text-main); font-weight: 600;">Historial de Transacciones Contabilizadas</h3>
+    
+    <table style="width: 100%; text-align: left; border-collapse: collapse;">
+        <thead>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <th style="padding: 1rem 0; color: var(--text-muted); font-size: 0.85rem;">Fecha de Pago</th>
+                <th style="padding: 1rem 0; color: var(--text-muted); font-size: 0.85rem;">Folio Factura</th>
+                <th style="padding: 1rem 0; color: var(--text-muted); font-size: 0.85rem;">Concepto</th>
+                <th style="padding: 1rem 0; color: var(--text-muted); font-size: 0.85rem; text-align: right;">Monto Liquidado</th>
+                <th style="padding: 1rem 0; color: var(--text-muted); font-size: 0.85rem;">Método de Pago</th>
+                <th style="padding: 1rem 0; color: var(--text-muted); font-size: 0.85rem; text-align: center;">Folio SAT (CFDI)</th>
+                <th style="padding: 1rem 0; color: var(--text-muted); font-size: 0.85rem; text-align: right;">Comprobantes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for invoice in invoices %}
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.01)'" onmouseout="this.style.backgroundColor='transparent'">
+                <td style="padding: 1.1rem 0; font-size: 0.9rem; color: var(--text-muted);">
+                    {{ invoice.fecha_emision|date:"d M Y" }}
+                </td>
+                <td style="padding: 1.1rem 0; font-weight: bold; color: var(--text-main);">
+                    #{{ invoice.id }}
+                </td>
+                <td style="padding: 1.1rem 0; font-size: 0.9rem; color: var(--text-main);">
+                    Mensualidad Internet - {{ invoice.periodo_facturacion }}
+                </td>
+                <td style="padding: 1.1rem 0; text-align: right; font-weight: bold; font-family: monospace; color: var(--accent-success);">
+                    ${{ invoice.monto }}
+                </td>
+                <td style="padding: 1.1rem 0; font-size: 0.85rem; color: var(--text-main);">
+                    {% if invoice.stripe_payment_intent %}
+                        <span style="display: flex; align-items: center; gap: 5px;">
+                            💳 Tarjeta (Stripe Sandbox)
+                        </span>
+                    {% else %}
+                        <span style="display: flex; align-items: center; gap: 5px;">
+                            🏦 Transferencia SPEI (Conciliado)
+                        </span>
+                    {% endif %}
+                </td>
+                <td style="padding: 1.1rem 0; text-align: center; font-family: monospace; font-size: 0.75rem; color: var(--text-muted);">
+                    {% if invoice.sat_uuid %}
+                        <span style="color: var(--accent-primary); font-weight: bold;">{{ invoice.sat_uuid|slice:":18" }}...</span>
+                    {% else %}
+                        <span style="color: var(--text-muted); font-style: italic;">Sin timbrado</span>
+                    {% endif %}
+                </td>
+                <td style="padding: 1.1rem 0; text-align: right;">
+                    <div style="display: inline-flex; gap: 5px;">
+                        <a href="{% url 'portal:descargar_pdf' invoice.id %}" class="btn" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-main); padding: 4px 8px; font-size: 0.75rem; text-decoration: none; border-radius: 4px;">
+                            📄 PDF
+                        </a>
+                        <a href="{% url 'portal:descargar_xml' invoice.id %}" class="btn" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: var(--accent-primary); padding: 4px 8px; font-size: 0.75rem; text-decoration: none; border-radius: 4px;">
+                            👾 XML
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" style="padding: 4rem 0; text-align: center; color: var(--text-muted);">
+                    No hay facturas pagadas registradas en tu historial contable.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

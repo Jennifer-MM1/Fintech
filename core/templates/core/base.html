@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Fintech - Gestión Financiera{% endblock %}</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="{% static 'core/css/index.css' %}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar animate-fade-in">
+            <div class="logo">FintechOS</div>
+            <nav>
+                <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    Dashboard
+                </a>
+                <a href="{% url 'billing:invoices' %}" class="nav-link {% if request.resolver_match.app_name == 'billing' %}active{% endif %}">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    Facturación
+                </a>
+                <a href="{% url 'accounting:reconciliation' %}" class="nav-link {% if request.resolver_match.url_name == 'reconciliation' %}active{% endif %}">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                    Conciliación
+                </a>
+                <a href="{% url 'accounting:reports' %}" class="nav-link {% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                    Reportes
+                </a>
+                <a href="{% url 'clients:list' %}" class="nav-link {% if request.resolver_match.app_name == 'clients' %}active{% endif %}">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    Directorio Clientes
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content animate-fade-in" style="animation-delay: 0.1s;">
+            <header class="top-header">
+                <h1>{% block header_title %}Dashboard{% endblock %}</h1>
+                <div class="user-profile" style="display: flex; align-items: center; gap: 15px;">
+                    <a href="{% url 'portal:logout' %}" class="btn" style="background: rgba(239, 68, 68, 0.1); color: var(--accent-danger); font-size: 0.8rem; border: 1px solid rgba(239, 68, 68, 0.2); text-decoration: none;">Cerrar Sesión</a>
+                    <div class="text-muted" style="font-size: 0.9rem;">Hola, {{ request.user.username }}</div>
+                    <div class="avatar">{{ request.user.username|make_list|first|upper }}</div>
+                </div>
+            </header>
+            
+            <div class="content-area">
+                {% block content %}
+                <!-- Default content overridden by children -->
+                {% endblock %}
+            </div>
+        </main>
+    </div>
+</body>
+</html>

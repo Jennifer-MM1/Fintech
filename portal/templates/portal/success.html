@@ -1,0 +1,51 @@
+{% extends 'portal/base_portal.html' %}
+
+{% block title %}FintechOS - Pago Exitoso{% endblock %}
+{% block header_title %}Confirmación de Pago{% endblock %}
+
+{% block content %}
+<div class="card animate-fade-in" style="background: var(--bg-dark); max-width: 600px; margin: 2rem auto; text-align: center; padding: 3rem 2rem; border: 1px solid rgba(16, 185, 129, 0.2); box-shadow: 0 10px 30px rgba(16, 185, 129, 0.08);">
+    
+    <!-- Icono Check Animado -->
+    <div style="width: 80px; height: 80px; background: rgba(16, 185, 129, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem auto; border: 2px solid rgba(16, 185, 129, 0.2);">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent-success)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+    </div>
+    
+    <h2 style="color: var(--accent-success); margin-bottom: 1rem; font-weight: 700;">¡Pago Confirmado Exitosamente!</h2>
+    <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 1rem; line-height: 1.5;">
+        Tu pago por <strong style="color: var(--text-main); font-size: 1.1rem; font-family: monospace;">${{ invoice.monto }} MXN</strong> para la factura <strong style="color: var(--text-main);">#{{ invoice.id }}</strong> ha sido procesado de forma exitosa por la pasarela de pagos.
+    </p>
+    
+    <!-- Recibo del Pago y Timbrado Fiscal SAT -->
+    <div style="background: var(--bg-panel); padding: 1.5rem; border-radius: 12px; text-align: left; margin-bottom: 2.5rem; border: 1px solid rgba(255,255,255,0.03); font-size: 0.9rem;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px;">
+            <span style="color: var(--text-muted);">Referencia de Cargo Stripe:</span>
+            <strong style="font-family: monospace; color: var(--text-main);">{{ invoice.stripe_payment_intent|slice:":24" }}...</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px;">
+            <span style="color: var(--text-muted);">Fecha y Hora de Operación:</span>
+            <strong style="color: var(--text-main);">{{ invoice.fecha_emision|date:"d M Y" }}</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px;">
+            <span style="color: var(--text-muted);">Folio Digital SAT (UUID):</span>
+            <strong style="color: var(--accent-primary); font-family: monospace; font-size: 0.8rem;">{{ invoice.sat_uuid }}</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Estatus Contable:</span>
+            <strong style="color: var(--accent-success); font-weight: bold;">CONCILIADO Y LIQUIDADO</strong>
+        </div>
+    </div>
+    
+    <!-- Acciones -->
+    <div style="display: flex; gap: 1rem; justify-content: center;">
+        <a href="{% url 'portal:dashboard' %}" class="btn" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 0.8rem 1.5rem; text-decoration: none; border-radius: 8px; font-weight: 500;">
+            Volver al Portal
+        </a>
+        <a href="{% url 'portal:descargar_pdf' invoice.id %}" class="btn btn-primary" style="background: var(--accent-success); padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);">
+            Descargar CFDI (PDF)
+        </a>
+    </div>
+</div>
+{% endblock %}

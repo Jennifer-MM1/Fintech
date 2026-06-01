@@ -1,0 +1,7 @@
+# Dependencias del Núcleo del Proyecto (FintechOS - ISP Cobros y Conciliación)
+Django>=5.0.0,<6.1.0
+psycopg2-binary>=2.9.9
+django-environ>=0.11.2
+stripe>=8.0.0
+gunicorn>=21.2.0
+reportlab>=4.1.0

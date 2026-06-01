@@ -1,0 +1,37 @@
+# Credenciales y Variables de Entorno (¡CRÍTICO!)
+.env
+.env.local
+.env.*.local
+
+# Entorno Virtual
+venv/
+.venv/
+env/
+ENV/
+*.venv
+
+# Caché de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Base de Datos Local (SQLite)
+*.sqlite3
+db.sqlite3
+
+# Archivos del Sistema Operativo
+.DS_Store
+Thumbs.db
+
+# IDEs y Editores
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp

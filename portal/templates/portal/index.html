@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Clientes - Pago de Facturas</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'core/css/index.css' %}">
+    <style>
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: var(--bg-dark); }
+        .login-box { width: 100%; max-width: 400px; padding: 2rem; background: var(--bg-panel); border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); }
+        .login-box h2 { text-align: center; margin-bottom: 2rem; color: var(--text-main); }
+        .input-group { margin-bottom: 1.5rem; }
+        .input-group label { display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.9rem; }
+        .input-group input { width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-dark); color: var(--text-main); outline: none; }
+        .input-group input:focus { border-color: var(--accent-primary); }
+    </style>
+</head>
+<body>
+    <div class="login-box animate-fade-in">
+        <h2>Ingreso a FintechOS</h2>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div style="background: rgba(239, 68, 68, 0.2); color: var(--accent-danger); padding: 10px; border-radius: 8px; margin-bottom: 1rem; text-align: center;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <form method="POST" action="{% url 'portal:index' %}">
+            {% csrf_token %}
+            <div class="input-group">
+                <label>Usuario / Correo</label>
+                <input type="text" name="username" placeholder="Ingresa tu usuario" required>
+            </div>
+            <div class="input-group">
+                <label>Contraseña</label>
+                <input type="password" name="password" placeholder="***" required>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Acceder</button>
+        </form>
+    </div>
+</body>
+</html>

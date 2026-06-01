@@ -1,0 +1,242 @@
+{% extends 'core/base.html' %}
+
+{% block title %}FintechOS - Directorio de Clientes & CRM{% endblock %}
+{% block header_title %}Directorio de Clientes & CRM{% endblock %}
+
+{% block content %}
+<!-- Banner de Estado de Negocio -->
+<div class="grid-3" style="margin-bottom: 2rem;">
+    <div class="card" style="border-left: 4px solid var(--accent-success);">
+        <h3 class="text-muted" style="font-size: 0.9rem;">Clientes Activos</h3>
+        <p style="font-size: 2rem; font-weight: 700; margin-top: 10px;">
+            {{ clients.count }}
+        </p>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--accent-primary);">
+        <h3 class="text-muted" style="font-size: 0.9rem;">Planes de Internet</h3>
+        <p style="font-size: 2rem; font-weight: 700; margin-top: 10px;">
+            {{ plans.count }}
+        </p>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--accent-danger);">
+        <h3 class="text-muted" style="font-size: 0.9rem;">Saldos por Cobrar</h3>
+        <p style="font-size: 2rem; font-weight: 700; margin-top: 10px;">
+            $1,200.00
+        </p>
+    </div>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div style="background: rgba(16, 185, 129, 0.15); color: var(--accent-success); border: 1px solid rgba(16, 185, 129, 0.3); padding: 12px; border-radius: 8px; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between;">
+            <span>{{ message }}</span>
+            <button onclick="this.parentElement.remove()" style="background:none; border:none; color:inherit; cursor:pointer; font-weight:bold;">&times;</button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<!-- CRM Workspace (Clientes & Planes) -->
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start;">
+    
+    <!-- Panel de Clientes -->
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h3>Directorio de Clientes</h3>
+            <button class="btn btn-primary" onclick="toggleModal('client-modal', true)">+ Nuevo Cliente</button>
+        </div>
+        
+        <table style="width: 100%; text-align: left; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <th style="padding: 1rem 0; color: var(--text-muted); font-size: 0.85rem;">Nombre / Razón Social</th>
+                    <th style="padding: 1rem 0; color: var(--text-muted); font-size: 0.85rem;">RFC / Referencia SPEI</th>
+                    <th style="padding: 1rem 0; color: var(--text-muted); font-size: 0.85rem;">Plan Contratado</th>
+                    <th style="padding: 1rem 0; color: var(--text-muted); font-size: 0.85rem; text-align: right;">Saldo</th>
+                    <th style="padding: 1rem 0; color: var(--text-muted); font-size: 0.85rem; text-align: center;">Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for client in clients %}
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.02)'" onmouseout="this.style.backgroundColor='transparent'">
+                    <td style="padding: 1.2rem 0;">
+                        <div style="font-weight: 600; color: var(--text-main);">{{ client.razon_social }}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Usuario: @{{ client.user.username }}</div>
+                    </td>
+                    <td style="padding: 1.2rem 0;">
+                        <div style="font-family: monospace; font-size: 0.9rem; color: var(--text-main);">{{ client.rfc }}</div>
+                        <div style="font-size: 0.8rem; background: rgba(59, 130, 246, 0.15); color: var(--accent-primary); padding: 2px 6px; border-radius: 4px; display: inline-block; font-weight: bold; margin-top: 4px;">{{ client.codigo_referencia }}</div>
+                    </td>
+                    <td style="padding: 1.2rem 0;">
+                        {% if client.plan %}
+                            <div style="font-weight: 500; font-size: 0.9rem;">{{ client.plan.nombre }}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">{{ client.plan.velocidad_mbps }} Mbps - ${{ client.plan.precio }}/mes</div>
+                        {% else %}
+                            <div style="color: var(--text-muted); font-size: 0.9rem;">Sin plan asignado</div>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 1.2rem 0; text-align: right; font-weight: bold; font-family: monospace;">
+                        {% if client.monto_saldo > 0 %}
+                            <span class="text-danger">${{ client.monto_saldo }}</span>
+                        {% else %}
+                            <span class="text-success">$0.00</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 1.2rem 0; text-align: center;">
+                        {% if client.estado == 'ACTIVE' %}
+                            <span style="background: rgba(16, 185, 129, 0.15); color: var(--accent-success); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; border: 1px solid rgba(16, 185, 129, 0.2);">Activo</span>
+                        {% elif client.estado == 'SUSPENDED' %}
+                            <span style="background: rgba(239, 68, 68, 0.15); color: var(--accent-danger); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; border: 1px solid rgba(239, 68, 68, 0.2);">Suspendido</span>
+                        {% else %}
+                            <span style="background: rgba(148, 163, 184, 0.15); color: var(--text-muted); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; border: 1px solid rgba(148, 163, 184, 0.2);">Inactivo</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="padding: 3rem 0; text-align: center; color: var(--text-muted);">
+                        No hay clientes registrados en este momento.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Panel de Planes -->
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h3>Planes Disponibles</h3>
+            <button class="btn btn-primary" onclick="toggleModal('plan-modal', true)" style="font-size: 0.8rem; padding: 0.4rem 0.8rem;">+ Nuevo Plan</button>
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            {% for plan in plans %}
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--accent-primary)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)'">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px;">
+                    <h4 style="color: var(--text-main); font-weight: 600;">{{ plan.nombre }}</h4>
+                    <span style="color: var(--accent-success); font-weight: bold; font-family: monospace; font-size: 1.1rem;">${{ plan.precio }}</span>
+                </div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">
+                    Velocidad: <strong style="color: var(--text-main);">{{ plan.velocidad_mbps }} Mbps</strong>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">{{ plan.descripcion|default:"Sin descripción." }}</p>
+            </div>
+            {% empty %}
+            <p style="text-align: center; color: var(--text-muted); padding: 2rem 0; font-size: 0.9rem;">No hay planes registrados.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- MODALES DE REGISTRO (CONSTRUIDOS EN HTML/CSS) -->
+<!-- ========================================== -->
+
+<!-- Modal de Cliente -->
+<div id="client-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+    <div class="card animate-fade-in" style="width: 100%; max-width: 500px; padding: 2rem; background: var(--bg-panel); border: 1px solid rgba(255,255,255,0.1);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;">
+            <h3 style="color: var(--text-main);">Nuevo Cliente de Internet</h3>
+            <button onclick="toggleModal('client-modal', false)" style="background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer;">&times;</button>
+        </div>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="new_client">
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                    <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px;">Usuario Portal</label>
+                    <input type="text" name="username" placeholder="ej. juanperez" required style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-dark); color: var(--text-main); font-size: 0.9rem;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px;">Contraseña Acceso</label>
+                    <input type="password" name="password" placeholder="***" required style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-dark); color: var(--text-main); font-size: 0.9rem;">
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px;">Razón Social / Nombre Completo</label>
+                <input type="text" name="razon_social" placeholder="ej. Juan Pérez o Tech Corp SA" required style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-dark); color: var(--text-main); font-size: 0.9rem;">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                    <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px;">RFC</label>
+                    <input type="text" name="rfc" placeholder="ABCD123456XYZ" required style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-dark); color: var(--text-main); font-size: 0.9rem; font-family: monospace;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px;">Plan de Internet</label>
+                    <select name="plan" required style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-dark); color: var(--text-main); font-size: 0.9rem; outline: none;">
+                        <option value="">Selecciona un plan</option>
+                        {% for plan in plans %}
+                            <option value="{{ plan.id }}">{{ plan.nombre }} (${{ plan.precio }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px;">Email de Facturación</label>
+                <input type="email" name="correo_facturacion" placeholder="ej. facturas@empresa.com" required style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-dark); color: var(--text-main); font-size: 0.9rem;">
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px;">Dirección de Instalación</label>
+                <textarea name="direccion" placeholder="Calle, Número, Colonia, Ciudad" rows="2" style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-dark); color: var(--text-main); font-size: 0.9rem; resize: none;"></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">Guardar y Crear Cliente</button>
+        </form>
+    </div>
+</div>
+
+<!-- Modal de Plan -->
+<div id="plan-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+    <div class="card animate-fade-in" style="width: 100%; max-width: 450px; padding: 2rem; background: var(--bg-panel); border: 1px solid rgba(255,255,255,0.1);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;">
+            <h3 style="color: var(--text-main);">Nuevo Plan de Servicio</h3>
+            <button onclick="toggleModal('plan-modal', false)" style="background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer;">&times;</button>
+        </div>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="new_plan">
+            
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px;">Nombre del Plan</label>
+                <input type="text" name="nombre" placeholder="ej. Paquete Gamer 200 Megas" required style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-dark); color: var(--text-main); font-size: 0.9rem;">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                    <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px;">Velocidad (Mbps)</label>
+                    <input type="number" name="velocidad" placeholder="ej. 200" required style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-dark); color: var(--text-main); font-size: 0.9rem;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px;">Precio Mensual ($ MXN)</label>
+                    <input type="number" step="0.01" name="precio" placeholder="ej. 599.00" required style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-dark); color: var(--text-main); font-size: 0.9rem;">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px;">Descripción del Plan</label>
+                <textarea name="descripcion" placeholder="Características del plan..." rows="3" style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-dark); color: var(--text-main); font-size: 0.9rem; resize: none;"></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">Crear Plan de Servicio</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function toggleModal(id, show) {
+    const modal = document.getElementById(id);
+    if (show) {
+        modal.style.display = 'flex';
+    } else {
+        modal.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}

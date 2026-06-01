@@ -1,0 +1,116 @@
+{% extends 'core/base.html' %}
+
+{% block title %}FintechOS - Reportes Contables{% endblock %}
+{% block header_title %}Estados Financieros y Reportes{% endblock %}
+
+{% block content %}
+<!-- Tarjetas de Resumen Financiero Rápido -->
+<div class="grid-3" style="margin-bottom: 2.5rem;">
+    <div class="card" style="border-left: 4px solid var(--accent-primary);">
+        <h3 class="text-muted" style="font-size: 0.9rem;">Total de Ingresos en Bancos</h3>
+        <p style="font-size: 2rem; font-weight: 700; margin-top: 10px; font-family: monospace; color: var(--text-main);">
+            ${{ total_cobrado|floatformat:2 }}
+        </p>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">Suma total de facturas liquidadas</span>
+    </div>
+    
+    <div class="card" style="border-left: 4px solid var(--accent-warning);">
+        <h3 class="text-muted" style="font-size: 0.9rem;">Cuentas por Cobrar (Clientes)</h3>
+        <p style="font-size: 2rem; font-weight: 700; margin-top: 10px; font-family: monospace; color: var(--accent-warning);">
+            ${{ cuentas_cobrar|floatformat:2 }}
+        </p>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">Facturación emitida pendiente en libros</span>
+    </div>
+    
+    <div class="card" style="border-left: 4px solid var(--accent-success);">
+        <h3 class="text-muted" style="font-size: 0.9rem;">Caja en Bancos (Disponible)</h3>
+        <p style="font-size: 2rem; font-weight: 700; margin-top: 10px; font-family: monospace; color: var(--accent-success);">
+            ${{ saldo_bancos|floatformat:2 }}
+        </p>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">Saldo neto real en caja de bancos</span>
+    </div>
+</div>
+
+<!-- Grid de Selección de Reportes -->
+<div class="grid-3" style="margin-bottom: 2.5rem;">
+    <!-- Tarjeta Estado de Resultados -->
+    <div class="card" style="background: var(--bg-dark); border: 1px solid {% if report_type == 'estado_resultados' %}var(--accent-primary){% else %}rgba(255,255,255,0.05){% endif %}; transition: all 0.2s;">
+        <h3 style="margin-bottom: 0.75rem; color: var(--text-main); font-weight: 600;">Estado de Resultados</h3>
+        <p class="text-muted" style="font-size: 0.85rem; margin-bottom: 1.5rem; line-height: 1.4;">
+            Analiza el rendimiento del ISP. Muestra ingresos cobrados, facturación pendiente y egresos del periodo para calcular tu utilidad neta.
+        </p>
+        <a href="?report=estado_resultados" class="btn btn-primary" style="width: 100%; text-align: center; text-decoration: none; display: block; background: {% if report_type == 'estado_resultados' %}var(--accent-primary){% else %}rgba(255,255,255,0.05){% endif %}; color: white;">
+            Generar Vista Previa
+        </a>
+    </div>
+
+    <!-- Tarjeta Balance General -->
+    <div class="card" style="background: var(--bg-dark); border: 1px solid {% if report_type == 'balance_general' %}var(--accent-primary){% else %}rgba(255,255,255,0.05){% endif %}; transition: all 0.2s;">
+        <h3 style="margin-bottom: 0.75rem; color: var(--text-main); font-weight: 600;">Balance General</h3>
+        <p class="text-muted" style="font-size: 0.85rem; margin-bottom: 1.5rem; line-height: 1.4;">
+            Muestra la posición financiera del negocio. Agrupa activos circulantes (efectivo y cuentas por cobrar) contra pasivos y el capital contable.
+        </p>
+        <a href="?report=balance_general" class="btn btn-primary" style="width: 100%; text-align: center; text-decoration: none; display: block; background: {% if report_type == 'balance_general' %}var(--accent-primary){% else %}rgba(255,255,255,0.05){% endif %}; color: white;">
+            Generar Vista Previa
+        </a>
+    </div>
+
+    <!-- Tarjeta Flujo de Efectivo -->
+    <div class="card" style="background: var(--bg-dark); border: 1px solid {% if report_type == 'flujo_efectivo' %}var(--accent-primary){% else %}rgba(255,255,255,0.05){% endif %}; transition: all 0.2s;">
+        <h3 style="margin-bottom: 0.75rem; color: var(--text-main); font-weight: 600;">Flujo de Efectivo</h3>
+        <p class="text-muted" style="font-size: 0.85rem; margin-bottom: 1.5rem; line-height: 1.4;">
+            Analiza las entradas y salidas brutas de caja en banco (SPEI y Stripe) y calcula la disponibilidad real de apertura y cierre de caja chica.
+        </p>
+        <a href="?report=flujo_efectivo" class="btn btn-primary" style="width: 100%; text-align: center; text-decoration: none; display: block; background: {% if report_type == 'flujo_efectivo' %}var(--accent-primary){% else %}rgba(255,255,255,0.05){% endif %}; color: white;">
+            Generar Vista Previa
+        </a>
+    </div>
+</div>
+
+<!-- AUDITORÍA Y VISTA PREVIA DETALLADA DEL REPORTE -->
+{% if report_data %}
+<div class="card animate-fade-in" style="background: var(--bg-dark); border: 1px solid rgba(59, 130, 246, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.25);">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1.25rem; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <h3 style="color: var(--text-main); margin-bottom: 4px;">{{ report_data.title }}</h3>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">{{ report_data.period }}</span>
+        </div>
+        
+        <!-- Descargar CSV Oficial -->
+        <a href="{% url 'accounting:download_report_csv' report_type %}" class="btn" style="background: var(--accent-success); color: white; text-decoration: none; font-weight: 600; padding: 0.7rem 1.5rem; display: flex; align-items: center; gap: 8px; border-radius: 6px; box-shadow: 0 4px 10px rgba(16,185,129,0.15);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Descargar Reporte (CSV)
+        </a>
+    </div>
+    
+    <table style="width: 100%; text-align: left; border-collapse: collapse;">
+        <thead>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <th style="padding: 0.85rem 0; color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">Concepto Contable / Cuenta</th>
+                <th style="padding: 0.85rem 0; color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-align: right; padding-right: 20px;">Importe (MXN)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for concepto, monto in report_data.rows %}
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03); 
+                {% if 'TOTAL' in concepto or 'UTILIDAD' in concepto or 'SALDO FINAL' in concepto %}
+                    background: rgba(255,255,255,0.02); font-weight: bold; border-top: 1px dashed rgba(255,255,255,0.15); border-bottom: 2px solid rgba(255,255,255,0.15);
+                {% endif %}">
+                <td style="padding: 1.1rem 0; font-size: 0.9rem; color: {% if 'TOTAL' in concepto or 'UTILIDAD' in concepto or 'SALDO FINAL' in concepto %}var(--text-main){% else %}var(--text-muted){% endif %};">
+                    {{ concepto }}
+                </td>
+                <td style="padding: 1.1rem 0; text-align: right; font-family: monospace; font-size: 1.05rem; padding-right: 20px; 
+                    color: {% if 'TOTAL' in concepto or 'UTILIDAD' in concepto or 'SALDO FINAL' in concepto %}var(--accent-success){% else %}var(--text-main){% endif %};">
+                    ${{ monto|floatformat:2 }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted); font-style: italic; text-align: right;">
+        * Los importes del reporte son calculados en tiempo real auditando los movimientos y facturaciones conciliados en Supabase.
+    </div>
+</div>
+{% endif %}
+{% endblock %}

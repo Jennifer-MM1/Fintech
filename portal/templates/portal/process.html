@@ -1,0 +1,33 @@
+{% extends 'portal/base_portal.html' %}
+
+{% block header_title %}Procesando Pago...{% endblock %}
+
+{% block content %}
+<div class="card animate-fade-in" style="background: var(--bg-dark); max-width: 500px; margin: 4rem auto; text-align: center; padding: 4rem 2rem;">
+    <!-- Animación simple de carga usando SVG y CSS -->
+    <style>
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .spinner { animation: spin 2s linear infinite; color: var(--accent-primary); margin-bottom: 2rem; }
+    </style>
+    <svg class="spinner" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="2" x2="12" y2="6"></line>
+        <line x1="12" y1="18" x2="12" y2="22"></line>
+        <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+        <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+        <line x1="2" y1="12" x2="6" y2="12"></line>
+        <line x1="18" y1="12" x2="22" y2="12"></line>
+        <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+        <line x1="16.24" y1="4.93" x2="19.07" y2="7.76"></line>
+    </svg>
+    
+    <h2 style="margin-bottom: 1rem;">Conectando con el Banco</h2>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">Por favor, no cierres ni actualices esta ventana. Estamos procesando tu transacción de forma segura.</p>
+    
+    <script>
+        // Simulamos un retraso de 3 segundos para el procesamiento del pago
+        setTimeout(function() {
+            window.location.href = "{% url 'portal:payment_success' invoice_id %}";
+        }, 3000);
+    </script>
+</div>
+{% endblock %}
