@@ -162,3 +162,29 @@ AUTH_USER_MODEL = 'core.User'
 LOGIN_URL = 'portal:index'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'portal:index'
+
+
+# -----------------------------------------------------------------------------
+# SEGURIDAD TLS/HTTPS (solo en producción)
+# Estas configuraciones fuerzan HTTPS y protegen cookies de sesión y CSRF.
+# Se activan automáticamente cuando DEBUG=False (entorno de producción).
+# -----------------------------------------------------------------------------
+if not DEBUG:
+    # Redirige todo el tráfico HTTP → HTTPS (TLS obligatorio)
+    SECURE_SSL_REDIRECT = True
+
+    # Las cookies de sesión (login) solo se envían por HTTPS
+    SESSION_COOKIE_SECURE = True
+
+    # La cookie CSRF solo se envía por HTTPS (protege formularios de pago)
+    CSRF_COOKIE_SECURE = True
+
+    # HSTS: le indica al navegador que SOLO acepte HTTPS por 1 año
+    SECURE_HSTS_SECONDS = 31536000  # 1 año en segundos
+
+    # Aplica HSTS también a todos los subdominios
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+    # Permite registrar el dominio en la lista pública de HSTS de los navegadores
+    SECURE_HSTS_PRELOAD = True
+

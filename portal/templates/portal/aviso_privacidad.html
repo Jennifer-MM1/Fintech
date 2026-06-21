@@ -1,0 +1,819 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aviso de Privacidad de FintechOS — Protección de Datos Personales conforme a la legislación mexicana vigente.">
+    <title>Aviso de Privacidad — FintechOS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --ink:        #1a1a2e;
+            --ink-light:  #3d3d5c;
+            --ink-muted:  #6b6b8a;
+            --rule:       #d4d4e0;
+            --rule-light: #ebebf2;
+            --bg:         #f7f7fb;
+            --paper:      #ffffff;
+            --accent:     #1b3a6b;      /* deep institutional blue */
+            --accent-mid: #2c5282;
+            --gold:       #8b6914;      /* formal gold for highlights */
+            --serif: 'Source Serif 4', Georgia, serif;
+            --sans:  'Inter', system-ui, sans-serif;
+        }
+
+        html { font-size: 16px; scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: var(--serif);
+            line-height: 1.75;
+            min-height: 100vh;
+        }
+
+        /* ── Letterhead bar ──────────────────────── */
+        .letterhead {
+            background: var(--accent);
+            color: #fff;
+            padding: 0;
+        }
+        .letterhead-inner {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 1.4rem 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .letterhead .org-name {
+            font-family: var(--sans);
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.03em;
+            opacity: 0.92;
+        }
+        .letterhead .doc-type {
+            font-family: var(--sans);
+            font-size: 0.78rem;
+            font-weight: 400;
+            opacity: 0.65;
+            text-align: right;
+            line-height: 1.4;
+        }
+
+        /* ── Gold rule ───────────────────────────── */
+        .gold-rule {
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold) 0%, #c9a227 40%, var(--gold) 100%);
+        }
+
+        /* ── Document wrapper ────────────────────── */
+        .doc-wrapper {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 3rem 2.5rem 5rem;
+        }
+
+        /* ── Document title block ────────────────── */
+        .doc-title-block {
+            text-align: center;
+            padding: 2.5rem 0 2rem;
+            border-bottom: 2px solid var(--ink);
+            margin-bottom: 2.5rem;
+        }
+        .doc-title-block .pre-title {
+            font-family: var(--sans);
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.6rem;
+        }
+        .doc-title-block h1 {
+            font-family: var(--serif);
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+        }
+        .doc-title-block .doc-subtitle {
+            font-family: var(--sans);
+            font-size: 0.88rem;
+            color: var(--ink-muted);
+            margin-bottom: 1.2rem;
+        }
+        .doc-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+            padding-top: 1rem;
+            border-top: 1px solid var(--rule);
+        }
+        .doc-meta span {
+            font-family: var(--sans);
+            font-size: 0.78rem;
+            color: var(--ink-muted);
+        }
+        .doc-meta span strong {
+            color: var(--ink-light);
+            font-weight: 600;
+        }
+
+        /* ── Table of contents ───────────────────── */
+        .toc {
+            background: var(--rule-light);
+            border-left: 3px solid var(--accent);
+            padding: 1.4rem 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+        .toc h3 {
+            font-family: var(--sans);
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--ink-muted);
+            margin-bottom: 0.9rem;
+        }
+        .toc ol {
+            padding-left: 1.2rem;
+            column-count: 2;
+            column-gap: 2rem;
+        }
+        .toc li {
+            margin-bottom: 0.3rem;
+            font-family: var(--sans);
+            font-size: 0.85rem;
+        }
+        .toc li a {
+            color: var(--accent-mid);
+            text-decoration: none;
+        }
+        .toc li a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Sections ────────────────────────────── */
+        .section {
+            margin-bottom: 2.8rem;
+            scroll-margin-top: 4rem;
+        }
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            border-bottom: 1px solid var(--rule);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.1rem;
+        }
+        .section-num {
+            font-family: var(--sans);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--gold);
+            flex-shrink: 0;
+        }
+        .section h2 {
+            font-family: var(--serif);
+            font-size: 1.08rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .section p {
+            font-size: 0.95rem;
+            color: var(--ink-light);
+            margin-bottom: 0.8rem;
+        }
+        .section p:last-child { margin-bottom: 0; }
+
+        /* ── Lists ───────────────────────────────── */
+        .section ul,
+        .section ol {
+            padding-left: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+        .section li {
+            font-size: 0.95rem;
+            color: var(--ink-light);
+            margin-bottom: 0.35rem;
+        }
+        .section li::marker {
+            color: var(--accent-mid);
+        }
+
+        /* ── Sub-headings within sections ────────── */
+        .section .sub-heading {
+            font-family: var(--sans);
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--ink);
+            margin-top: 1.1rem;
+            margin-bottom: 0.4rem;
+        }
+
+        /* ── Legal basis footnote ────────────────── */
+        .legal-note {
+            margin-top: 1rem;
+            padding: 0.8rem 1rem;
+            background: var(--rule-light);
+            border-left: 2px solid var(--rule);
+            font-family: var(--sans);
+            font-size: 0.78rem;
+            color: var(--ink-muted);
+            line-height: 1.5;
+        }
+        .legal-note strong {
+            color: var(--ink-light);
+        }
+
+        /* ── ARCO Rights table ───────────────────── */
+        .arco-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.88rem;
+        }
+        .arco-table thead tr {
+            background: var(--accent);
+            color: #fff;
+        }
+        .arco-table thead th {
+            padding: 0.65rem 1rem;
+            text-align: left;
+            font-family: var(--sans);
+            font-weight: 600;
+            font-size: 0.78rem;
+            letter-spacing: 0.05em;
+        }
+        .arco-table tbody tr {
+            border-bottom: 1px solid var(--rule-light);
+        }
+        .arco-table tbody tr:nth-child(even) {
+            background: var(--rule-light);
+        }
+        .arco-table tbody td {
+            padding: 0.6rem 1rem;
+            color: var(--ink-light);
+            vertical-align: top;
+        }
+        .arco-table tbody td:first-child {
+            font-family: var(--sans);
+            font-weight: 600;
+            color: var(--accent-mid);
+            white-space: nowrap;
+        }
+
+        /* ── Contact block ───────────────────────── */
+        .contact-block {
+            background: var(--paper);
+            border: 1px solid var(--rule);
+            padding: 1.4rem 1.6rem;
+            margin-top: 1rem;
+        }
+        .contact-block p {
+            font-family: var(--sans);
+            font-size: 0.88rem;
+            margin-bottom: 0.4rem;
+        }
+        .contact-block p:last-child { margin-bottom: 0; }
+        .contact-block a {
+            color: var(--accent-mid);
+            text-decoration: none;
+        }
+        .contact-block a:hover { text-decoration: underline; }
+
+        /* ── Legal framework list ────────────────── */
+        .framework-list {
+            column-count: 2;
+            column-gap: 2rem;
+            padding-left: 1.5rem;
+        }
+        .framework-list li {
+            font-size: 0.88rem;
+            margin-bottom: 0.35rem;
+            break-inside: avoid;
+        }
+
+        /* ── Signature block ─────────────────────── */
+        .signature-block {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--ink);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .signature-block .sig-left {
+            font-family: var(--sans);
+            font-size: 0.82rem;
+            color: var(--ink-muted);
+        }
+        .signature-block .sig-left strong {
+            display: block;
+            color: var(--ink);
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+        .sig-return {
+            display: inline-block;
+            padding: 0.55rem 1.4rem;
+            background: var(--accent);
+            color: #fff;
+            font-family: var(--sans);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-decoration: none;
+            letter-spacing: 0.03em;
+            transition: background 0.2s;
+        }
+        .sig-return:hover { background: var(--accent-mid); }
+
+        /* ── Page footer ─────────────────────────── */
+        .page-footer {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 1.2rem 2.5rem;
+            border-top: 1px solid var(--rule);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .page-footer span {
+            font-family: var(--sans);
+            font-size: 0.75rem;
+            color: var(--ink-muted);
+        }
+        .page-footer a {
+            color: var(--accent-mid);
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-family: var(--sans);
+        }
+        .page-footer a:hover { text-decoration: underline; }
+
+        @media (max-width: 640px) {
+            .doc-wrapper { padding: 2rem 1.2rem 4rem; }
+            .letterhead-inner { padding: 1rem 1.2rem; }
+            .toc ol, .framework-list { column-count: 1; }
+            .arco-table { font-size: 0.82rem; }
+            .doc-title-block h1 { font-size: 1.5rem; }
+            .page-footer { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Letterhead -->
+    <div class="letterhead">
+        <div class="letterhead-inner">
+            <span class="org-name">FintechOS &nbsp;S.A. de C.V.</span>
+            <span class="doc-type">Área de Protección de Datos Personales<br>Querétaro, México</span>
+        </div>
+    </div>
+    <div class="gold-rule"></div>
+
+    <!-- Document body -->
+    <div class="doc-wrapper">
+
+        <!-- Title block -->
+        <div class="doc-title-block">
+            <p class="pre-title">Documento Oficial</p>
+            <h1>Aviso de Privacidad</h1>
+            <p class="doc-subtitle">
+                Conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares y demás ordenamientos aplicables
+            </p>
+            <div class="doc-meta">
+                <span><strong>Versión:</strong> 2.0</span>
+                <span><strong>Fecha de emisión:</strong> Junio de 2026</span>
+                <span><strong>Vigencia:</strong> Indefinida hasta nueva versión</span>
+                <span><strong>Responsable:</strong> FintechOS S.A. de C.V.</span>
+            </div>
+        </div>
+
+        <!-- Table of contents -->
+        <div class="toc">
+            <h3>Índice de Contenidos</h3>
+            <ol>
+                <li><a href="#responsable">Identidad y domicilio del Responsable</a></li>
+                <li><a href="#datos">Datos personales recabados</a></li>
+                <li><a href="#finalidades">Finalidades del tratamiento</a></li>
+                <li><a href="#transferencias">Transferencias de datos</a></li>
+                <li><a href="#derechos">Derechos ARCO</a></li>
+                <li><a href="#cookies">Uso de cookies</a></li>
+                <li><a href="#seguridad">Medidas de seguridad</a></li>
+                <li><a href="#menores">Protección de menores de edad</a></li>
+                <li><a href="#cambios">Modificaciones al aviso</a></li>
+                <li><a href="#contacto">Contacto y autoridad competente</a></li>
+                <li><a href="#marco">Marco jurídico aplicable</a></li>
+            </ol>
+        </div>
+
+        <!-- I -->
+        <div class="section" id="responsable">
+            <div class="section-header">
+                <span class="section-num">Artículo I</span>
+                <h2>Identidad y Domicilio del Responsable</h2>
+            </div>
+            <p>
+                <strong>FintechOS, S.A. de C.V.</strong>, con domicilio fiscal en la ciudad de Querétaro, Querétaro, México,
+                en adelante <em>"el Responsable"</em>, es la persona moral responsable del tratamiento de sus datos personales
+                en los términos del presente Aviso de Privacidad, emitido en cumplimiento del artículo 15 de la
+                Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP).
+            </p>
+            <p>
+                El Responsable ha designado un <strong>Oficial de Protección de Datos Personales</strong> a quien podrá
+                dirigirse para cualquier asunto relacionado con el tratamiento de su información personal.
+                Los datos de contacto se encuentran en el apartado X del presente documento.
+            </p>
+            <div class="legal-note">
+                <strong>Fundamento:</strong> Constitución Política de los Estados Unidos Mexicanos, artículos 6 y 16 —
+                LFPDPPP, artículos 15 al 17 — Ley General de Protección de Datos Personales en Posesión de Sujetos Obligados
+                (LGPDPPSO) — Constitución Política del Estado de Querétaro —
+                Ley de Protección de Datos Personales en Posesión de Sujetos Obligados del Estado de Querétaro —
+                Declaración Universal de Derechos Humanos, artículo 12 — Pacto de San José, artículo 11.
+            </div>
+        </div>
+
+        <!-- II -->
+        <div class="section" id="datos">
+            <div class="section-header">
+                <span class="section-num">Artículo II</span>
+                <h2>Datos Personales Recabados</h2>
+            </div>
+            <p>
+                Para la prestación de los servicios de facturación electrónica y gestión de cobros que ofrece el Responsable,
+                se recaban las siguientes categorías de datos personales:
+            </p>
+            <p class="sub-heading">a) Datos de identificación</p>
+            <p>Nombre completo o Razón Social, Registro Federal de Contribuyentes (RFC) y, en su caso, Clave Única de Registro de Población (CURP).</p>
+            <p class="sub-heading">b) Datos de contacto</p>
+            <p>Correo electrónico, número telefónico y domicilio fiscal para efectos de facturación.</p>
+            <p class="sub-heading">c) Datos financieros y patrimoniales</p>
+            <p>Información relativa al procesamiento de pagos, historial de transacciones, montos adeudados y comprobantes fiscales digitales.</p>
+            <p class="sub-heading">d) Datos de autenticación</p>
+            <p>Nombre de usuario y contraseña, almacenada mediante cifrado irreversible. El Responsable no tiene acceso a contraseñas en texto plano.</p>
+            <p class="sub-heading">e) Datos fiscales</p>
+            <p>Folio de Comprobante Fiscal Digital por Internet (CFDI), UUID de timbrado ante el Servicio de Administración Tributaria (SAT).</p>
+            <p class="sub-heading">f) Datos de navegación</p>
+            <p>Dirección IP, tipo y versión de navegador web, y cookies de sesión estrictamente necesarias para el funcionamiento del portal.</p>
+            <p class="sub-heading">Datos personales sensibles</p>
+            <p>
+                El Responsable no recaba datos personales sensibles en los términos del artículo 3, fracción VI de la LFPDPPP
+                (datos de salud, biometría, origen racial, ideología política, afiliación sindical, preferencia sexual, entre otros).
+                En el supuesto de que resultara necesario recabar alguna de estas categorías, se solicitará su consentimiento expreso y por escrito
+                conforme al artículo 9 del mismo ordenamiento.
+            </p>
+            <div class="legal-note">
+                <strong>Fundamento:</strong> LFPDPPP, artículos 3, 8 y 9 — Ley de Instituciones de Crédito, artículo 117 —
+                Ley del Mercado de Valores — Ley Federal del Trabajo — LGPDPPSO, artículo 3 — Convenio 108 del Consejo de Europa.
+            </div>
+        </div>
+
+        <!-- III -->
+        <div class="section" id="finalidades">
+            <div class="section-header">
+                <span class="section-num">Artículo III</span>
+                <h2>Finalidades del Tratamiento</h2>
+            </div>
+            <p class="sub-heading">Finalidades primarias (necesarias para la relación jurídica)</p>
+            <ol>
+                <li>Registro, autenticación y administración de su cuenta de usuario en el portal de clientes.</li>
+                <li>Emisión, timbrado y envío de Comprobantes Fiscales Digitales por Internet (CFDI) ante el SAT.</li>
+                <li>Procesamiento, validación y registro contable de pagos de facturas a través de pasarela de cobro.</li>
+                <li>Generación de estados de cuenta, historial de pagos y reportes contables y financieros.</li>
+                <li>Cumplimiento de obligaciones fiscales, contables y legales ante autoridades competentes de los ámbitos federal y estatal.</li>
+                <li>Atención a requerimientos de autoridades (SAT, CNBV, IMSS, INAI, entre otras) conforme a la normativa vigente.</li>
+                <li>Prevención, detección y reporte de operaciones con recursos de procedencia ilícita conforme a la Ley Anti-Lavado.</li>
+            </ol>
+            <p class="sub-heading">Finalidades secundarias (puede manifestar su oposición en cualquier momento)</p>
+            <ol>
+                <li>Envío de comunicaciones informativas sobre actualizaciones y mejoras del servicio.</li>
+                <li>Realización de encuestas de satisfacción orientadas a la mejora continua.</li>
+                <li>Análisis estadístico interno mediante datos disociados o anonimizados para la optimización de procesos.</li>
+            </ol>
+            <p>
+                Para oponerse al tratamiento de sus datos personales para finalidades secundarias, podrá enviar su solicitud
+                al correo electrónico <strong>privacidad@fintechos.mx</strong>, indicando el asunto
+                "Oposición a finalidades secundarias", junto con su nombre completo y datos de identificación.
+            </p>
+            <div class="legal-note">
+                <strong>Fundamento:</strong> LFPDPPP, artículos 12 al 17 — Ley de Instituciones de Crédito —
+                Ley del Mercado de Valores — LGPDPPSO, artículo 16 —
+                Ley Federal de Telecomunicaciones y Radiodifusión, artículo 190 —
+                Lineamientos del Aviso de Privacidad (DOF).
+            </div>
+        </div>
+
+        <!-- IV -->
+        <div class="section" id="transferencias">
+            <div class="section-header">
+                <span class="section-num">Artículo IV</span>
+                <h2>Transferencias de Datos Personales</h2>
+            </div>
+            <p>
+                El Responsable podrá transferir datos personales a terceros, sin requerir el consentimiento del titular,
+                en los supuestos previstos en el artículo 37 de la LFPDPPP y el artículo 22 de la LGPDPPSO,
+                incluyendo los siguientes destinatarios:
+            </p>
+            <ul>
+                <li><strong>Servicio de Administración Tributaria (SAT):</strong> Para la validación y timbrado de CFDI, conforme a la legislación fiscal aplicable.</li>
+                <li><strong>Instituciones bancarias y procesadores de pago (Stripe Inc.):</strong> Para la liquidación segura de transacciones financieras. Stripe opera bajo estándar PCI-DSS Nivel 1; el Responsable no almacena datos de tarjeta de crédito o débito.</li>
+                <li><strong>Autoridades fiscales, judiciales o administrativas:</strong> Cuando sea requerido por mandato legal, resolución judicial o requerimiento de autoridad competente.</li>
+                <li><strong>Comisión Nacional Bancaria y de Valores (CNBV):</strong> En el ámbito de las facultades de supervisión y vigilancia del sistema financiero.</li>
+                <li><strong>Instituto Nacional de Transparencia, Acceso a la Información y Protección de Datos Personales (INAI):</strong> En el ejercicio de sus funciones de regulación y vigilancia.</li>
+                <li><strong>Proveedores de infraestructura tecnológica:</strong> Que actúan como encargados del tratamiento bajo cláusulas contractuales de confidencialidad y acuerdos de nivel de servicio.</li>
+            </ul>
+            <p>
+                Toda transferencia internacional de datos personales se realizará conforme al artículo 36 de la LFPDPPP,
+                garantizando al titular un nivel de protección equivalente o superior al establecido en la legislación mexicana
+                y en el Convenio 108 del Consejo de Europa.
+            </p>
+            <div class="legal-note">
+                <strong>Fundamento:</strong> LFPDPPP, artículos 36 y 37 — LGPDPPSO, artículo 22 —
+                Ley de Instituciones de Crédito, artículo 117 — Ley del Mercado de Valores —
+                Convenio 108 del Consejo de Europa — Ley de Transparencia del Estado de Querétaro.
+            </div>
+        </div>
+
+        <!-- V -->
+        <div class="section" id="derechos">
+            <div class="section-header">
+                <span class="section-num">Artículo V</span>
+                <h2>Derechos ARCO del Titular</h2>
+            </div>
+            <p>
+                En términos del Capítulo IV de la LFPDPPP y el artículo 16 de la Constitución Política de los Estados Unidos Mexicanos,
+                usted tiene derecho a Acceder, Rectificar, Cancelar u Oponerse (Derechos ARCO) al tratamiento de sus datos personales:
+            </p>
+            <table class="arco-table">
+                <thead>
+                    <tr>
+                        <th>Derecho</th>
+                        <th>Descripción</th>
+                        <th>Plazo de respuesta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Acceso</td>
+                        <td>Conocer qué datos personales obran en nuestros archivos, con qué finalidad son tratados y las condiciones del tratamiento.</td>
+                        <td>20 días hábiles</td>
+                    </tr>
+                    <tr>
+                        <td>Rectificación</td>
+                        <td>Solicitar la corrección de datos inexactos, incompletos o desactualizados que le conciernan.</td>
+                        <td>20 días hábiles</td>
+                    </tr>
+                    <tr>
+                        <td>Cancelación</td>
+                        <td>Solicitar la supresión de sus datos cuando haya concluido la relación jurídica o no exista causa legal para conservarlos.</td>
+                        <td>20 días hábiles</td>
+                    </tr>
+                    <tr>
+                        <td>Oposición</td>
+                        <td>Oponerse al tratamiento de sus datos para finalidades determinadas, especialmente las de carácter secundario o mercadotécnico.</td>
+                        <td>20 días hábiles</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="margin-top: 1rem;">
+                Para ejercer sus Derechos ARCO, deberá presentar su solicitud por escrito al correo electrónico
+                <strong>privacidad@fintechos.mx</strong>, adjuntando: nombre completo, copia de identificación oficial vigente,
+                descripción clara y precisa del derecho que desea ejercer, y domicilio o medio para recibir la notificación.
+                El Responsable resolverá su solicitud en los plazos establecidos por la LFPDPPP.
+            </p>
+            <div class="legal-note">
+                <strong>Fundamento:</strong> CPEUM, artículo 16 — LFPDPPP, artículos 22 al 35 —
+                LGPDPPSO, artículos 25 al 47 — Ley General de Transparencia y Acceso a la Información Pública —
+                Ley Federal de Transparencia y Acceso a la Información Pública —
+                Ley de Transparencia del Estado de Querétaro — DUDH, artículo 12 —
+                Pacto de San José, artículo 11 — Lineamientos Generales de Protección de Datos Personales para el Sector Público.
+            </div>
+        </div>
+
+        <!-- VI -->
+        <div class="section" id="cookies">
+            <div class="section-header">
+                <span class="section-num">Artículo VI</span>
+                <h2>Uso de Cookies y Tecnologías de Seguimiento</h2>
+            </div>
+            <p>
+                El portal de FintechOS utiliza exclusivamente <strong>cookies técnicas o estrictamente necesarias</strong>
+                para garantizar el correcto funcionamiento del sistema de autenticación y la seguridad de los formularios.
+                No se emplean cookies de publicidad, rastreo de comportamiento ni perfilado de usuarios.
+            </p>
+            <p class="sub-heading">Cookies utilizadas</p>
+            <ul>
+                <li><strong>sessionid:</strong> Cookie de sesión de Django que mantiene la autenticación del usuario activa. Se elimina al cerrar el navegador o cerrar sesión.</li>
+                <li><strong>csrftoken:</strong> Token de seguridad que protege los formularios del portal contra ataques de falsificación de solicitud entre sitios (CSRF). Su uso es obligatorio por motivos de seguridad.</li>
+                <li><strong>fintechos_privacy_accepted:</strong> Almacena localmente la preferencia del usuario respecto al banner de aviso de privacidad.</li>
+            </ul>
+            <p>
+                El usuario puede configurar su navegador para bloquear o eliminar cookies; sin embargo, la restricción
+                de las cookies técnicas señaladas puede impedir el funcionamiento correcto del portal.
+            </p>
+            <div class="legal-note">
+                <strong>Fundamento:</strong> LFPDPPP, artículo 3, fracción XIV (datos derivados) —
+                Ley Federal de Telecomunicaciones y Radiodifusión, artículo 190 —
+                Lineamientos del Aviso de Privacidad — Convenio 108 del Consejo de Europa.
+            </div>
+        </div>
+
+        <!-- VII -->
+        <div class="section" id="seguridad">
+            <div class="section-header">
+                <span class="section-num">Artículo VII</span>
+                <h2>Medidas de Seguridad Implementadas</h2>
+            </div>
+            <p>
+                El Responsable ha implementado las medidas de seguridad administrativas, técnicas y físicas que resultan
+                necesarias y suficientes para proteger los datos personales contra daño, pérdida, alteración, destrucción
+                o el acceso, uso o tratamiento no autorizado, conforme al artículo 19 de la LFPDPPP:
+            </p>
+            <ul>
+                <li><strong>Cifrado en tránsito:</strong> Protocolo TLS/HTTPS en todas las comunicaciones entre el cliente y el servidor.</li>
+                <li><strong>Cifrado de contraseñas:</strong> Almacenamiento mediante algoritmo PBKDF2 con sal criptográfica aleatoria.</li>
+                <li><strong>Control de acceso basado en roles:</strong> Autenticación con sesiones de tiempo limitado y separación de privilegios por perfil de usuario.</li>
+                <li><strong>Protección CSRF:</strong> Tokens de integridad en todos los formularios del portal.</li>
+                <li><strong>Registro de auditoría:</strong> Bitácora de accesos y operaciones críticas sobre datos personales.</li>
+                <li><strong>Respaldos periódicos:</strong> Copias de seguridad cifradas con retención conforme a la Ley General de Archivos y la Ley de Archivos del Estado de Querétaro.</li>
+                <li><strong>Subcontratación de pagos:</strong> El procesamiento de tarjetas se delega a Stripe Inc. (certificado PCI-DSS Nivel 1). FintechOS no almacena datos de instrumentos de pago.</li>
+            </ul>
+            <div class="legal-note">
+                <strong>Fundamento:</strong> LFPDPPP, artículo 19 — LGPDPPSO, artículo 31 —
+                Ley General de Archivos — Ley Federal de Archivos — Ley de Archivos del Estado de Querétaro —
+                Ley de Instituciones de Crédito — Lineamientos Generales de Protección de Datos Personales para el Sector Público.
+            </div>
+        </div>
+
+        <!-- VIII -->
+        <div class="section" id="menores">
+            <div class="section-header">
+                <span class="section-num">Artículo VIII</span>
+                <h2>Protección de Menores de Edad</h2>
+            </div>
+            <p>
+                Los servicios de FintechOS están dirigidos de manera exclusiva a personas físicas mayores de 18 años
+                con plena capacidad legal para contratar y a personas morales debidamente constituidas.
+                El Responsable no recaba datos personales de menores de edad de manera intencional.
+            </p>
+            <p>
+                En caso de que el Responsable tuviese conocimiento de que un menor de edad ha proporcionado datos personales
+                sin autorización de su representante legal, procederá a la eliminación inmediata de dicha información,
+                conforme a la Ley General de los Derechos de Niñas, Niños y Adolescentes y la Ley General de Educación.
+                Le solicitamos informarnos a la brevedad a <strong>privacidad@fintechos.mx</strong>
+                si tiene conocimiento de dicha situación.
+            </p>
+            <div class="legal-note">
+                <strong>Fundamento:</strong> CPEUM, artículo 4 — Ley General de Educación, artículo 75 —
+                Ley General de los Derechos de Niñas, Niños y Adolescentes — LGPDPPSO, artículo 9 —
+                Declaración Universal de Derechos Humanos, artículo 25.
+            </div>
+        </div>
+
+        <!-- IX -->
+        <div class="section" id="cambios">
+            <div class="section-header">
+                <span class="section-num">Artículo IX</span>
+                <h2>Modificaciones al Aviso de Privacidad</h2>
+            </div>
+            <p>
+                El Responsable se reserva el derecho de actualizar o modificar el presente Aviso de Privacidad en cualquier
+                momento, a fin de adecuarlo a reformas legislativas, criterios jurisprudenciales o cambios en las condiciones
+                del servicio. Toda modificación será notificada al titular mediante los siguientes mecanismos, con al menos
+                30 días naturales de anticipación:
+            </p>
+            <ul>
+                <li>Publicación de la nueva versión en el portal de clientes, con indicación de la fecha de entrada en vigor.</li>
+                <li>Notificación al correo electrónico registrado en el perfil del titular.</li>
+                <li>Aviso visible en la pantalla de inicio de sesión del portal durante el periodo de transición.</li>
+            </ul>
+            <p>
+                El uso continuado del portal con posterioridad a la entrada en vigor de las modificaciones constituirá
+                la aceptación tácita de las mismas, salvo manifestación expresa de oposición en los términos del artículo IX
+                del presente instrumento.
+            </p>
+            <div class="legal-note">
+                <strong>Fundamento:</strong> LFPDPPP, artículos 13 y 14 — Lineamientos del Aviso de Privacidad (DOF) —
+                LGPDPPSO, artículo 28 — Ley General de Transparencia — Ley de Transparencia del Estado de Querétaro.
+            </div>
+        </div>
+
+        <!-- X -->
+        <div class="section" id="contacto">
+            <div class="section-header">
+                <span class="section-num">Artículo X</span>
+                <h2>Contacto, Reclamaciones y Autoridad Competente</h2>
+            </div>
+            <p>
+                Para ejercer sus Derechos ARCO, presentar quejas o solicitar información adicional sobre el tratamiento
+                de sus datos personales, puede contactar al Oficial de Protección de Datos Personales:
+            </p>
+            <div class="contact-block">
+                <p><strong>Oficial de Protección de Datos Personales</strong></p>
+                <p>FintechOS, S.A. de C.V.</p>
+                <p>Correo electrónico: <a href="mailto:privacidad@fintechos.mx">privacidad@fintechos.mx</a></p>
+                <p>Domicilio: Querétaro, Querétaro, México, C.P. 76000</p>
+                <p>Tiempo de respuesta: 20 días hábiles (LFPDPPP) / 15 días hábiles (LGPDPPSO)</p>
+            </div>
+            <p style="margin-top: 1.2rem;">
+                Si el titular considera que su solicitud no fue atendida de forma satisfactoria, o que el tratamiento
+                de sus datos personales vulnera sus derechos, podrá acudir ante el
+                <strong>Instituto Nacional de Transparencia, Acceso a la Información y Protección de Datos Personales (INAI)</strong>,
+                autoridad competente en la materia:
+            </p>
+            <div class="contact-block">
+                <p><strong>INAI — Instituto Nacional de Transparencia, Acceso a la Información y Protección de Datos Personales</strong></p>
+                <p>Sitio web: <a href="https://www.inai.org.mx" target="_blank" rel="noopener">www.inai.org.mx</a></p>
+                <p>Línea de atención: 800 835 4324 — Lunes a viernes, 9:00 a 18:00 hrs.</p>
+                <p>Domicilio: Insurgentes Sur No. 3211, Col. Insurgentes Cuicuilco, Alcaldía Coyoacán, Ciudad de México.</p>
+            </div>
+            <div class="legal-note">
+                <strong>Fundamento:</strong> LFPDPPP, artículos 38 al 44 — LGPDPPSO, artículos 104 al 112 —
+                Ley General de Transparencia, artículo 8 — Ley Federal de Transparencia —
+                Ley de Transparencia del Estado de Querétaro — Reglamentos y lineamientos internos del INAI.
+            </div>
+        </div>
+
+        <!-- XI -->
+        <div class="section" id="marco">
+            <div class="section-header">
+                <span class="section-num">Artículo XI</span>
+                <h2>Marco Jurídico Aplicable</h2>
+            </div>
+            <p>
+                El presente Aviso de Privacidad se emite en observancia de los siguientes ordenamientos jurídicos:
+            </p>
+            <ol class="framework-list">
+                <li>Constitución Política de los Estados Unidos Mexicanos (artículos 6 y 16)</li>
+                <li>Ley General de Protección de Datos Personales en Posesión de Sujetos Obligados</li>
+                <li>Ley Federal de Protección de Datos Personales en Posesión de los Particulares y su Reglamento</li>
+                <li>Ley General de Transparencia y Acceso a la Información Pública</li>
+                <li>Ley Federal de Transparencia y Acceso a la Información Pública</li>
+                <li>Ley General de Archivos</li>
+                <li>Ley Federal de Archivos</li>
+                <li>Ley de Instituciones de Crédito</li>
+                <li>Ley del Mercado de Valores</li>
+                <li>Ley Federal de Telecomunicaciones y Radiodifusión</li>
+                <li>Ley General de Salud</li>
+                <li>Ley General de Educación</li>
+                <li>Ley Federal del Trabajo</li>
+                <li>Lineamientos Generales de Protección de Datos Personales para el Sector Público</li>
+                <li>Lineamientos del Aviso de Privacidad (DOF)</li>
+                <li>Declaración Universal de Derechos Humanos (artículo 12)</li>
+                <li>Convención Americana sobre Derechos Humanos — Pacto de San José (artículo 11)</li>
+                <li>Convenio 108 del Consejo de Europa para la Protección de Datos</li>
+                <li>Constitución Política del Estado de Querétaro</li>
+                <li>Ley de Protección de Datos Personales en Posesión de Sujetos Obligados del Estado de Querétaro</li>
+                <li>Ley de Transparencia del Estado de Querétaro</li>
+                <li>Ley de Archivos del Estado de Querétaro</li>
+                <li>Leyes especiales aplicables (salud, educación, menores, administración pública)</li>
+                <li>Reglamentos y lineamientos internos de FintechOS, S.A. de C.V.</li>
+            </ol>
+        </div>
+
+        <!-- Signature block -->
+        <div class="signature-block">
+            <div class="sig-left">
+                <strong>FintechOS, S.A. de C.V.</strong>
+                Oficial de Protección de Datos Personales<br>
+                Querétaro, Qro., México — Junio de 2026<br>
+                Documento con validez en términos de la LFPDPPP
+            </div>
+            <a href="{% url 'portal:index' %}" class="sig-return" id="btn-regresar-portal">
+                Regresar al Portal
+            </a>
+        </div>
+
+    </div><!-- /doc-wrapper -->
+
+    <!-- Page footer -->
+    <div class="page-footer">
+        <span>© 2026 FintechOS S.A. de C.V. — Todos los derechos reservados</span>
+        <span>
+            Contacto: <a href="mailto:privacidad@fintechos.mx">privacidad@fintechos.mx</a>
+            &nbsp;|&nbsp;
+            <a href="https://www.inai.org.mx" target="_blank" rel="noopener">INAI</a>
+        </span>
+    </div>
+
+</body>
+</html>

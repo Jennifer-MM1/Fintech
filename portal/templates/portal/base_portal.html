@@ -4,18 +4,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Cliente - Fintech</title>
+    <meta name="description" content="Portal de clientes FintechOS - Gestión de facturas, pagos y datos fiscales.">
+    <title>Portal Cliente - FintechOS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'core/css/index.css' %}">
+    <style>
+        /* ── Portal footer ────────────────────────── */
+        .portal-footer {
+            margin-top: auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.6rem;
+        }
+        .portal-footer .footer-copy {
+            color: rgba(148,163,184,0.45);
+            font-size: 0.75rem;
+        }
+        .portal-footer .footer-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .portal-footer .footer-links a {
+            color: rgba(148,163,184,0.55);
+            font-size: 0.75rem;
+            text-decoration: none;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .portal-footer .footer-links a:hover { color: var(--accent-success); }
+        /* ── Privacy link in sidebar ──────────────── */
+        .nav-privacy-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.6rem 1rem;
+            margin-top: auto;
+            color: rgba(148,163,184,0.5);
+            font-size: 0.8rem;
+            text-decoration: none;
+            border-radius: 8px;
+            border: 1px solid rgba(16,185,129,0.1);
+            background: rgba(16,185,129,0.03);
+            transition: all 0.2s;
+        }
+        .nav-privacy-link:hover {
+            color: var(--accent-success);
+            border-color: rgba(16,185,129,0.25);
+            background: rgba(16,185,129,0.07);
+        }
+    </style>
 </head>
 <body>
     <div class="app-container">
         <!-- Sidebar Navigation -->
         <aside class="sidebar animate-fade-in" style="background: var(--bg-dark); border-right: 1px solid rgba(255,255,255,0.1);">
             <div class="logo" style="color: var(--accent-success);">Mi Portal</div>
-            <nav>
+            <nav style="display:flex; flex-direction:column; flex:1;">
                 <a href="{% url 'portal:dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" {% if request.resolver_match.url_name == 'dashboard' %}style="background-color: rgba(16, 185, 129, 0.1); color: var(--accent-success);"{% endif %}>
                     Facturas Pendientes
                 </a>
@@ -24,6 +77,13 @@
                 </a>
                 <a href="{% url 'portal:profile' %}" class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" {% if request.resolver_match.url_name == 'profile' %}style="background-color: rgba(16, 185, 129, 0.1); color: var(--accent-success);"{% endif %}>
                     Mis Datos Fiscales
+                </a>
+
+                <!-- Privacy notice link at bottom of sidebar -->
+                <a href="{% url 'portal:aviso_privacidad' %}" target="_blank"
+                   class="nav-privacy-link" id="sidebar-privacy-link"
+                   style="margin-top: 2rem;" title="Ver Aviso de Privacidad completo">
+                    Aviso de Privacidad
                 </a>
             </nav>
         </aside>
@@ -43,6 +103,30 @@
                 {% block content %}
                 {% endblock %}
             </div>
+
+            <!-- ── Portal Footer ─────────────────────── -->
+            <footer class="portal-footer" role="contentinfo">
+                <span class="footer-copy">
+                    &copy; 2026 FintechOS S.A. de C.V. &nbsp;&middot;&nbsp; Todos los derechos reservados
+                </span>
+                <div class="footer-links">
+                    <a href="{% url 'portal:aviso_privacidad' %}" target="_blank" id="footer-link-privacidad">
+                        Aviso de Privacidad
+                    </a>
+                    <span style="color: rgba(148,163,184,0.25); font-size: 0.75rem;">|</span>
+                    <a href="{% url 'portal:aviso_privacidad' %}#derechos" target="_blank" id="footer-link-arco">
+                        Derechos ARCO
+                    </a>
+                    <span style="color: rgba(148,163,184,0.25); font-size: 0.75rem;">|</span>
+                    <a href="mailto:privacidad@fintechos.mx" id="footer-link-contacto">
+                        privacidad@fintechos.mx
+                    </a>
+                    <span style="color: rgba(148,163,184,0.25); font-size: 0.75rem;">|</span>
+                    <a href="https://www.inai.org.mx" target="_blank" rel="noopener" id="footer-link-inai">
+                        INAI
+                    </a>
+                </div>
+            </footer>
         </main>
     </div>
 </body>

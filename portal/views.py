@@ -195,6 +195,11 @@ def portal_logout_view(request):
     return redirect('portal:index')
 
 
+def aviso_privacidad_view(request):
+    """Public view for the full Privacy Notice page (no login required)."""
+    return render(request, 'portal/aviso_privacidad.html')
+
+
 from django.http import HttpResponse
 from billing.services.sat_service import SatBillingService
 from billing.services.pdf_service import PdfInvoiceService
